@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StreamFlix - BDIX & Local Movie Player</title>
+    <style>
+        :root {
+            --primary-color: #e50914;
+            --primary-hover: #b80710;
+            --bg-dark: #141414;
+            --card-bg: #1f1f1f;
+            --text-main: #ffffff;
+            --text-muted: #aaaaaa;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header Layout */
+        header {
+            background-color: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid #282828;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo span {
+            color: #fff;
+        }
+
+        .status-badge {
+            background: #222;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid #333;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #00ff88;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #00ff88;
+        }
+
+        /* Main Container Layout */
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 25px auto;
+            flex: 1;
+        }
+
+        /* Player Section with Auto-Fit 16:9 Aspect Ratio */
+        .player-wrapper {
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+            border: 1px solid #2a2a2a;
+            position: relative;
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+            background-color: #050505;
+        }
+
+        .video-container video, 
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border: none;
+        }
+
+        .movie-info {
+            padding: 20px;
+            background: var(--card-bg);
+        }
+
+        .movie-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        .movie-meta {
+            display: flex;
+            gap: 12px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .badge {
+            background: #333;
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: #ddd;
+        }
+
+        /* Controls / Custom Inputs */
+        .url-input-section {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 25px;
+            border: 1px solid #2a2a2a;
+        }
+
+        .url-input-section h3 {
+            font-size: 16px;
+            margin-bottom: 12px;
+            color: #ddd;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .input-group input {
+            flex: 1;
+            min-width: 260px;
+            padding: 12px 16px;
+            background: #121212;
+            border: 1px solid #333;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .input-group input:focus {
+            border-color: var(--primary-color);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        /* Playlist Section */
+        .section-title {
+            font-size: 20px;
+            margin: 35px 0 15px 0;
+        }
+
+        .playlist-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .movie-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s;
+            border: 1px solid #282828;
+        }
+
+        .movie-card:hover {
+            transform: translateY(-5px);
+            border-color: #444;
+        }
+
+        .thumbnail-box {
+            width: 100%;
+            height: 280px;
+            position: relative;
+            background: #111;
+        }
+
+        .thumbnail-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card-details {
+            padding: 12px;
+        }
+
+        .card-title {
+            font-size: 15px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .card-sub {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        footer {
+            background: #0a0a0a;
+            padding: 20px;
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-muted);
+            border-top: 1px solid #222;
+            margin-top: 50px;
+        }
+
+        @media (max-width: 768px) {
+            .thumbnail-box { height: 200px; }
+            .playlist-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="logo">🎬 Stream<span>Flix</span></div>
+        <div class="status-badge"><span class="status-dot"></span> BDIX Local Network Active</div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+
+        <!-- Responsive Video Player -->
+        <div class="player-wrapper">
+            <div class="video-container" id="playerContainer">
+                <video id="mainVideoPlayer" controls poster="http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Supergirl%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/a_AL_.jpg">
+                    <source src="http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Supergirl%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/Supergirl%20%282026%29%20720p%20AMZN-WEB%20x264%20MSubs%20%5BDual%20Audio%5D%5BHindi%205.1%2BEnglish%205.1%5D%20-MsMod.mkv" type="video/x-matroska">
+                </video>
+            </div>
+            
+            <div class="movie-info">
+                <h1 class="movie-title" id="currentMovieTitle">Supergirl (2026) 720p Dual Audio</h1>
+                <div class="movie-meta">
+                    <span class="badge">720p WEBRip</span>
+                    <span class="badge">Hindi 5.1 / English 5.1</span>
+                    <span>BDIX Server</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Custom Link Input -->
+        <div class="url-input-section">
+            <h3>🔗 যেকোনো কাস্টম ভিডিও বা YouTube লিংক প্লে করুন:</h3>
+            <div class="input-group">
+                <input type="text" id="customUrlInput" placeholder="এখানে ভিডিও (.mkv, .mp4) বা YouTube Embed লিংক পেস্ট করুন...">
+                <button class="btn" onclick="loadCustomUrl()">প্লে করুন</button>
+            </div>
+        </div>
+
+        <!-- Movie List -->
+        <div class="section-title">📹 রিসেন্ট মুভি লিস্ট</div>
+        <div class="playlist-grid">
+            
+            <div class="movie-card" onclick="playMovie('Supergirl (2026) 720p Dual Audio', 'http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Supergirl%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/Supergirl%20%282026%29%20720p%20AMZN-WEB%20x264%20MSubs%20%5BDual%20Audio%5D%5BHindi%205.1%2BEnglish%205.1%5D%20-MsMod.mkv', 'http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Supergirl%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/a_AL_.jpg')">
+                <div class="thumbnail-box">
+                    <img src="http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Supergirl%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/a_AL_.jpg" alt="Supergirl">
+                </div>
+                <div class="card-details">
+                    <div class="card-title">Supergirl (2026)</div>
+                    <div class="card-sub">720p • Dual Audio</div>
+                </div>
+            </div>
+
+            <div class="movie-card" onclick="playMovie('Spider-Man Brand New Day (2026) 720p Hindi+English', 'http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Spider-Man%20-%20Brand%20New%20Day%20%282026%29%20720p%20HDTC%20V3%20%5BMulti%20Audio%5D/Spider-Man%20Brand%20New%20Day%20%282026%29%20720p%20HDTC%20V3%20x264%20ESub%20%5BMulti%20Audio%5D%5BHindi%20%28Clean%29%2BEnglish%20CAM%2BMulti%20CAM%5D%20-HDHub.mkv')">
+                <div class="thumbnail-box">
+                    <img src="http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Spider-Man%20-%20Brand%20New%20Day%20%282026%29%20720p%20HDTC%20V3%20%5BMulti%20Audio%5D/a_AL_.jpg" alt="Spider-Man Brand New Day">
+                </div>
+                <div class="card-details">
+                    <div class="card-title">Spider-Man Brand New Day (2026)</div>
+                    <div class="card-sub">720 . Dual Audio</div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2026 StreamFlix UI • BDIX Local Video Player Engine</p>
+    </footer>
+
+    <!-- JavaScript logic -->
+    <script>
+        const playerContainer = document.getElementById('playerContainer');
+        const currentMovieTitle = document.getElementById('currentMovieTitle');
+
+        function playMovie(title, videoUrl, posterUrl) {
+            currentMovieTitle.innerText = title;
+            playerContainer.innerHTML = `
+                <video id="mainVideoPlayer" controls autoplay poster="${posterUrl}">
+                    <source src="${videoUrl}" type="video/x-matroska">
+                </video>
+            `;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function playYoutube(title, embedUrl) {
+            currentMovieTitle.innerText = title;
+            playerContainer.innerHTML = `
+                <iframe src="${embedUrl}?autoplay=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            `;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function loadCustomUrl() {
+            const inputUrl = document.getElementById('customUrlInput').value.trim();
+            if (!inputUrl) return alert('অনুগ্রহ করে একটি লিংক দিন!');
+
+            if (inputUrl.includes('youtube.com') || inputUrl.includes('youtu.be')) {
+                let embedUrl = inputUrl.replace('watch?v=', 'embed/');
+                playYoutube('Custom YouTube Video', embedUrl);
+            } else {
+                playMovie('Custom Local Video Stream', inputUrl, '');
+            }
+        }
+    </script>
+</body>
+</html>
