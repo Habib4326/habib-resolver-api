@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StreamFlix - BDIX & Local Movie Player</title>
+    <title>StreamFlix - Auto Generated Player</title>
     <style>
         :root {
             --primary-color: #e50914;
@@ -13,331 +13,681 @@
             --text-main: #ffffff;
             --text-muted: #aaaaaa;
         }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        /* Header Layout */
-        header {
-            background-color: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(8px);
-            padding: 15px 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            border-bottom: 1px solid #282828;
-        }
-
-        .logo {
-            font-size: 24px;
-            font-weight: 800;
-            color: var(--primary-color);
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .logo span {
-            color: #fff;
-        }
-
-        .status-badge {
-            background: #222;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border: 1px solid #333;
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            background-color: #00ff88;
-            border-radius: 50%;
-            box-shadow: 0 0 8px #00ff88;
-        }
-
-        /* Main Container Layout */
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 25px auto;
-            flex: 1;
-        }
-
-        /* Player Section with Auto-Fit 16:9 Aspect Ratio */
-        .player-wrapper {
-            background: #000;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
-            border: 1px solid #2a2a2a;
-            position: relative;
-        }
-
-        .video-container {
-            position: relative;
-            width: 100%;
-            padding-top: 56.25%; /* 16:9 Aspect Ratio */
-            background-color: #050505;
-        }
-
-        .video-container video, 
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            border: none;
-        }
-
-        .movie-info {
-            padding: 20px;
-            background: var(--card-bg);
-        }
-
-        .movie-title {
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 8px;
-            color: #fff;
-        }
-
-        .movie-meta {
-            display: flex;
-            gap: 12px;
-            font-size: 13px;
-            color: var(--text-muted);
-        }
-
-        .badge {
-            background: #333;
-            padding: 2px 8px;
-            border-radius: 4px;
-            color: #ddd;
-        }
-
-        /* Controls / Custom Inputs */
-        .url-input-section {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 20px;
-            margin-top: 25px;
-            border: 1px solid #2a2a2a;
-        }
-
-        .url-input-section h3 {
-            font-size: 16px;
-            margin-bottom: 12px;
-            color: #ddd;
-        }
-
-        .input-group {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .input-group input {
-            flex: 1;
-            min-width: 260px;
-            padding: 12px 16px;
-            background: #121212;
-            border: 1px solid #333;
-            border-radius: 6px;
-            color: #fff;
-            font-size: 14px;
-            outline: none;
-        }
-
-        .input-group input:focus {
-            border-color: var(--primary-color);
-        }
-
-        .btn {
-            padding: 12px 24px;
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .btn:hover {
-            background-color: var(--primary-hover);
-        }
-
-        /* Playlist Section */
-        .section-title {
-            font-size: 20px;
-            margin: 35px 0 15px 0;
-        }
-
-        .playlist-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 20px;
-        }
-
-        .movie-card {
-            background: var(--card-bg);
-            border-radius: 8px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: transform 0.3s;
-            border: 1px solid #282828;
-        }
-
-        .movie-card:hover {
-            transform: translateY(-5px);
-            border-color: #444;
-        }
-
-        .thumbnail-box {
-            width: 100%;
-            height: 280px;
-            position: relative;
-            background: #111;
-        }
-
-        .thumbnail-box img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .card-details {
-            padding: 12px;
-        }
-
-        .card-title {
-            font-size: 15px;
-            font-weight: 600;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .card-sub {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-top: 4px;
-        }
-
-        footer {
-            background: #0a0a0a;
-            padding: 20px;
-            text-align: center;
-            font-size: 13px;
-            color: var(--text-muted);
-            border-top: 1px solid #222;
-            margin-top: 50px;
-        }
-
-        @media (max-width: 768px) {
-            .thumbnail-box { height: 200px; }
-            .playlist-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-dark); color: var(--text-main); display: flex; flex-direction: column; min-height: 100vh; }
+        header { background-color: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid #282828; }
+        .logo { font-size: 24px; font-weight: 800; color: var(--primary-color); text-transform: uppercase; letter-spacing: 1.5px; display: flex; align-items: center; gap: 8px; }
+        .logo span { color: #fff; }
+        .status-badge { background: #222; padding: 6px 14px; border-radius: 20px; font-size: 13px; display: flex; align-items: center; gap: 8px; border: 1px solid #333; }
+        .status-dot { width: 8px; height: 8px; background-color: #00ff88; border-radius: 50%; box-shadow: 0 0 8px #00ff88; }
+        .container { width: 90%; max-width: 1200px; margin: 25px auto; flex: 1; }
+        .player-wrapper { background: #000; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.7); border: 1px solid #2a2a2a; position: relative; }
+        .video-container { position: relative; width: 100%; padding-top: 56.25%; background-color: #050505; }
+        .video-container video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; border: none; }
+        .movie-info { padding: 20px; background: var(--card-bg); }
+        .movie-title { font-size: 22px; font-weight: 700; margin-bottom: 8px; color: #fff; }
+        .movie-meta { display: flex; gap: 12px; font-size: 13px; color: var(--text-muted); }
+        .badge { background: #333; padding: 2px 8px; border-radius: 4px; color: #ddd; }
+        .url-input-section { background: var(--card-bg); border-radius: 12px; padding: 20px; margin-top: 25px; border: 1px solid #2a2a2a; }
+        .url-input-section h3 { font-size: 16px; margin-bottom: 12px; color: #ddd; }
+        .input-group { display: flex; gap: 10px; flex-wrap: wrap; }
+        .input-group input { flex: 1; min-width: 260px; padding: 12px 16px; background: #121212; border: 1px solid #333; border-radius: 6px; color: #fff; font-size: 14px; outline: none; }
+        .input-group input:focus { border-color: var(--primary-color); }
+        .btn { padding: 12px 24px; background-color: var(--primary-color); color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; transition: background 0.3s; }
+        .btn:hover { background-color: var(--primary-hover); }
+        .btn:disabled { background-color: #444; cursor: not-allowed; }
+        .section-title { font-size: 20px; margin: 35px 0 15px 0; }
+        .playlist-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+        .movie-card { background: var(--card-bg); border-radius: 8px; overflow: hidden; cursor: pointer; transition: transform 0.3s; border: 1px solid #282828; }
+        .movie-card:hover { transform: translateY(-5px); border-color: #444; }
+        .thumbnail-box { width: 100%; height: 280px; position: relative; background: #111; }
+        .thumbnail-box img { width: 100%; height: 100%; object-fit: cover; }
+        .card-details { padding: 12px; }
+        .card-title { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .card-sub { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+        .pagination { display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 30px; }
+        .page-info { font-size: 15px; font-weight: 600; color: #ddd; }
+        footer { background: #0a0a0a; padding: 20px; text-align: center; font-size: 13px; color: var(--text-muted); border-top: 1px solid #222; margin-top: 50px; }
+        @media (max-width: 768px) { .thumbnail-box { height: 200px; } .playlist-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); } }
     </style>
 </head>
 <body>
 
-    <!-- Header -->
     <header>
         <div class="logo">🎬 Stream<span>Flix</span></div>
         <div class="status-badge"><span class="status-dot"></span> BDIX Local Network Active</div>
     </header>
 
-    <!-- Main Content -->
     <div class="container">
-
-        <!-- Responsive Video Player -->
         <div class="player-wrapper">
             <div class="video-container" id="playerContainer">
-                <video id="mainVideoPlayer" controls poster="http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Supergirl%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/a_AL_.jpg">
-                    <source src="http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Supergirl%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/Supergirl%20%282026%29%20720p%20AMZN-WEB%20x264%20MSubs%20%5BDual%20Audio%5D%5BHindi%205.1%2BEnglish%205.1%5D%20-MsMod.mkv" type="video/x-matroska">
+                <video id="mainVideoPlayer" controls poster="http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Roommates%20%282026%29%20720p%20NF%20%5BDual%20Audio%5D/a_AL_.jpg">
+                    <source src="http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Roommates%20%282026%29%20720p%20NF%20%5BDual%20Audio%5D/Roommates%20%282026%29%20720p%20NF-WEB%20x264%20MSubs%20%5BDual%20Audio%5D%5BHindi%205.1%2BEnglish%205.1%5D%20-MsMod.mkv" type="video/x-matroska">
                 </video>
             </div>
             
             <div class="movie-info">
-                <h1 class="movie-title" id="currentMovieTitle">Supergirl (2026) 720p Dual Audio</h1>
+                <h1 class="movie-title" id="currentMovieTitle">Roommates (2026) 720p NF [Dual Audio]</h1>
                 <div class="movie-meta">
-                    <span class="badge">720p WEBRip</span>
-                    <span class="badge">Hindi 5.1 / English 5.1</span>
-                    <span>BDIX Server</span>
+                    <span class="badge">BDIX Server</span>
+                    <span class="badge">Auto Scraped</span>
                 </div>
             </div>
         </div>
 
-        <!-- Custom Link Input -->
         <div class="url-input-section">
-            <h3>🔗 যেকোনো কাস্টম ভিডিও বা YouTube লিংক প্লে করুন:</h3>
+            <h3>🔗 Play Custom Video URL:</h3>
             <div class="input-group">
-                <input type="text" id="customUrlInput" placeholder="এখানে ভিডিও (.mkv, .mp4) বা YouTube Embed লিংক পেস্ট করুন...">
-                <button class="btn" onclick="loadCustomUrl()">প্লে করুন</button>
+                <input type="text" id="customUrlInput" placeholder="Paste video link (.mkv, .mp4) here...">
+                <button class="btn" onclick="loadCustomUrl()">Play Now</button>
             </div>
         </div>
 
-        <!-- Movie List -->
-        <div class="section-title">📹 রিসেন্ট মুভি লিস্ট</div>
-        <div class="playlist-grid">
-            
-            <div class="movie-card" onclick="playMovie('Supergirl (2026) 720p Dual Audio', 'http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Supergirl%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/Supergirl%20%282026%29%20720p%20AMZN-WEB%20x264%20MSubs%20%5BDual%20Audio%5D%5BHindi%205.1%2BEnglish%205.1%5D%20-MsMod.mkv', 'http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Supergirl%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/a_AL_.jpg')">
-                <div class="thumbnail-box">
-                    <img src="http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Supergirl%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/a_AL_.jpg" alt="Supergirl">
-                </div>
-                <div class="card-details">
-                    <div class="card-title">Supergirl (2026)</div>
-                    <div class="card-sub">720p • Dual Audio</div>
-                </div>
-            </div>
+        <div class="section-title">📹 Recent Movie List</div>
+        <div class="playlist-grid" id="playlistGrid"></div>
 
-            <div class="movie-card" onclick="playMovie('Spider-Man Brand New Day (2026) 720p Hindi+English', 'http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Spider-Man%20-%20Brand%20New%20Day%20%282026%29%20720p%20HDTC%20V3%20%5BMulti%20Audio%5D/Spider-Man%20Brand%20New%20Day%20%282026%29%20720p%20HDTC%20V3%20x264%20ESub%20%5BMulti%20Audio%5D%5BHindi%20%28Clean%29%2BEnglish%20CAM%2BMulti%20CAM%5D%20-HDHub.mkv')">
-                <div class="thumbnail-box">
-                    <img src="http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Spider-Man%20-%20Brand%20New%20Day%20%282026%29%20720p%20HDTC%20V3%20%5BMulti%20Audio%5D/a_AL_.jpg" alt="Spider-Man Brand New Day">
-                </div>
-                <div class="card-details">
-                    <div class="card-title">Spider-Man Brand New Day (2026)</div>
-                    <div class="card-sub">720 . Dual Audio</div>
-                </div>
-            </div>
-
+        <div class="pagination">
+            <button class="btn" id="prevBtn" onclick="changePage(-1)">Previous</button>
+            <span class="page-info" id="pageIndicator">Page 1</span>
+            <button class="btn" id="nextBtn" onclick="changePage(1)">Next</button>
         </div>
-
     </div>
 
     <footer>
         <p>&copy; 2026 StreamFlix UI • BDIX Local Video Player Engine</p>
     </footer>
 
-    <!-- JavaScript logic -->
     <script>
+        const movies = [
+    {
+        "title": "Roommates (2026) 720p NF [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Roommates%20%282026%29%20720p%20NF%20%5BDual%20Audio%5D/Roommates%20%282026%29%20720p%20NF-WEB%20x264%20MSubs%20%5BDual%20Audio%5D%5BHindi%205.1%2BEnglish%205.1%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Roommates%20%282026%29%20720p%20NF%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "One Mile (2026) 720p AMZN [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/One%20Mile%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/One%20Mile%20Chapter%20One%20%282026%29%20720p%20AMZN-WEB%20x264%20ESub%20%5BDual%20Audio%5D%5BHindi%205.1%2BEnglish%205.1%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/One%20Mile%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "Masters of the Universe (2026) 720p AMZN [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Masters%20of%20the%20Universe%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/Masters%20of%20the%20Universe%20%282026%29%20720p%20AMZN-WEB%20x264%20MSubs%20%5BDual%20Audio%5D%5BHindi%205.1%2BEnglish%205.1%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Masters%20of%20the%20Universe%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "Enola Holmes 3 (2026) 720p NF [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Enola%20Holmes%203%20%282026%29%20720p%20NF%20%5BDual%20Audio%5D/Enola%20Holmes%203%20%282026%29%20720p%20NF-WEB%20x264%20MSubs%20%5BDual%20Audio%5D%5BHindi%205.1%2BEnglish%205.1%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Enola%20Holmes%203%20%282026%29%20720p%20NF%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "Over Your Dead Body (2026) 720p AMZN [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Over%20Your%20Dead%20Body%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/Over%20Your%20Dead%20Body%20%282026%29%20720p%20AMZN-WEB%20x264%20MSubs%20%5BDual%20Audio%5D%5BHindi%205.1%2BEnglish%205.1%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Over%20Your%20Dead%20Body%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "I Can Only Imagine 2 (2026) 720p WEBRip",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/I%20Can%20Only%20Imagine%202%20%282026%29%20720p%20WEBRip/I.Can.Only.Imagine.2.2026.720p.WEB-DL.x264.ESub-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/I%20Can%20Only%20Imagine%202%20%282026%29%20720p%20WEBRip/a_AL_.jpg"
+    },
+    {
+        "title": "Office Romance (2026) 720p NF [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Office%20Romance%20%282026%29%20720p%20NF%20%5BDual%20Audio%5D/Office%20Romance%20%282026%29%20720p%20NF-WEB%20x264%20MSubs%20%5BDual%20Audio%5D%5BHindi%205.1%2BEnglish%205.1%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Office%20Romance%20%282026%29%20720p%20NF%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "Wuthering Heights (2026) 720p WEBRip",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Wuthering%20Heights%20%282026%29%20720p%20WEBRip/Wuthering.Heights.2026.720p.WEB-DL.x264.ESub-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Wuthering%20Heights%20%282026%29%20720p%20WEBRip/a_AL_.jpg"
+    },
+    {
+        "title": "Crime 101 (2026) 720p AMZN [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Crime%20101%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/Crime%20101%20%282026%29%20720p%20AMZN-WEB%20x264%20MSubs%20%5BDual%20Audio%5D%5BHindi%205.1%2BEnglish%205.1%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Crime%20101%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "Speed Demon (2026) 720p AMZN [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Speed%20Demon%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/Speed%20Demon%20%282026%29%20720p%20AMZN-WEB%20x264%20ESub%20%5BDual%20Audio%5D%5BHindi%202.0%2BEnglish%205.1%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Speed%20Demon%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "Balls Up (2026) 720p AMZN [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Balls%20Up%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/Balls%20Up%20%282026%29%20720p%20AMZN-WEB%20x264%20MSubs%20%5BDual%20Audio%5D%5BHindi%205.1%2BEnglish%205.1%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Balls%20Up%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "Reminders of Him (2026) 720p AMZN [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Reminders%20of%20Him%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/Reminders%20of%20Him%20%282026%29%20720p%20AMZN-WEB%20x264%20MSubs%20%5BDual%20Audio%5D%5BHindi%205.1%2BEnglish%205.1%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Reminders%20of%20Him%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "They Will Kill You (2026) 720p WEBRip",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/They%20Will%20Kill%20You%20%282026%29%20720p%20WEBRip/They.Will.Kill.You.2026.720p.WEB-DL.x264.ESub-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/They%20Will%20Kill%20You%20%282026%29%20720p%20WEBRip/a_AL_.jpg"
+    },
+    {
+        "title": "The Highest Stakes (2026) 720p AMZN [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/The%20Highest%20Stakes%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/The%20Highest%20Stakes%20%282026%29%20720p%20AMZN-WEB%20x264%20MSubs%20%5BDual%20Audio%5D%5BHindi%205.1%2BEnglish%205.1%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/The%20Highest%20Stakes%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "The Dresden Sun (2026) 720p WEBRip",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/The%20Dresden%20Sun%20%282026%29%20720p%20WEBRip/The.Dresden.Sun.2026.720p.WEB-DL.x264.ESub-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/The%20Dresden%20Sun%20%282026%29%20720p%20WEBRip/a_AL_.jpg"
+    },
+    {
+        "title": "In the Blink of an Eye (2026) 720p WEBRip",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/In%20the%20Blink%20of%20an%20Eye%20%282026%29%20720p%20WEBRip/In.the.Blink.of.an.Eye.2026.720p.WEB-DL.x264.ESub-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/In%20the%20Blink%20of%20an%20Eye%20%282026%29%20720p%20WEBRip/a_AL_.jpg"
+    },
+    {
+        "title": "Lee Cronin's The Mummy (2026) 720p AMZN [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Lee%20Cronin%27s%20The%20Mummy%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/Lee%20Cronins%20The%20Mummy%20%282026%29%20720p%20AMZN-WEB%20x264%20ESub%20%5BDual%20Audio%5D%5BHindi%205.1%2BEnglish%205.1%5D%20-HDHub.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Lee%20Cronin%27s%20The%20Mummy%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "Storm Rider-Legend of Hammerhead (2026) 720p WEBRip",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Storm%20Rider-Legend%20of%20Hammerhead%20%282026%29%20720p%20WEBRip/Storm.Rider.Legend.of.Hammerhead.2026.720p.WEB-DL.x264.ESub-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Storm%20Rider-Legend%20of%20Hammerhead%20%282026%29%20720p%20WEBRip/a_AL_.jpg"
+    },
+    {
+        "title": "Speed Faster (2026) 720p WEBRip",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Speed%20Faster%20%282026%29%20720p%20WEBRip/Speed.Faster.2026.720p.WEB-DL.x264.ESub-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Speed%20Faster%20%282026%29%20720p%20WEBRip/a_AL_.jpg"
+    },
+    {
+        "title": "Do Not Enter (2026) 720p AMZN [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Do%20Not%20Enter%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/Do%20Not%20Enter%20%282026%29%20720p%20AMZN-WEB%20x264%20MSubs%20%5BDual%20Audio%5D%5BHindi%205.1%2BEnglish%205.1%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Do%20Not%20Enter%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "28 Years Later-The Bone Temple (2026) 720p AMZN [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/28%20Years%20Later-The%20Bone%20Temple%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/28%20Years%20Later%20The%20Bone%20Temple%20%282026%29%20720p%20AMZN-WEB%20x264%20ESub%20%5BDual%20Audio%5D%5BHindi%205.1%2BEnglish%205.1%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/28%20Years%20Later-The%20Bone%20Temple%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "The Investigation of Lucy Letby (2026) 720p NF [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/The%20Investigation%20of%20Lucy%20Letby%20%282026%29%20720p%20NF%20%5BDual%20Audio%5D/The%20Investigation%20of%20Lucy%20Letby%20%282026%29%20720p%20NF-WEB%20x264%20MSubs%20%5BDual%20Audio%5D%5BHindi%205.1%2BEnglish%205.1%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/The%20Investigation%20of%20Lucy%20Letby%20%282026%29%20720p%20NF%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "Tyler Perry's Joe's College Road Trip (2026) 720p NF [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Tyler%20Perry%27s%20Joe%27s%20College%20Road%20Trip%20%282026%29%20720p%20NF%20%5BDual%20Audio%5D/Tyler%20Perrys%20Joes%20College%20Road%20Trip%20%282026%29%20720p%20NF-WEB%20x264%20MSubs%20%5BDual%20Audio%5D%5BHindi%205.1%2BEnglish%205.1%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Tyler%20Perry%27s%20Joe%27s%20College%20Road%20Trip%20%282026%29%20720p%20NF%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "Mike & Nick & Nick & Alice (2026) 720p WEBRip",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Mike%20%26%20Nick%20%26%20Nick%20%26%20Alice%20%282026%29%20720p%20WEBRip/Mike.and.Nick.and.Nick.and.Alice.2026.720p.WEB-DL.x264.ESub-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Mike%20%26%20Nick%20%26%20Nick%20%26%20Alice%20%282026%29%20720p%20WEBRip/a_AL_.jpg"
+    },
+    {
+        "title": "Beast (2026) 720p WEBRip",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Beast%20%282026%29%20720p%20WEBRip/Beast.2026.720p.WEB-DL.x264.ESub-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Beast%20%282026%29%20720p%20WEBRip/a_AL_.jpg"
+    },
+    {
+        "title": "A Great Awakening (2026) 720p WEBRip",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/A%20Great%20Awakening%20%282026%29%20720p%20WEBRip/A.Great.Awakening.2026.720p.WEB-DL.x264.ESub-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/A%20Great%20Awakening%20%282026%29%20720p%20WEBRip/a_AL_.jpg"
+    },
+    {
+        "title": "Pretty Lethal (2026) 720p AMZN [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Pretty%20Lethal%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/Pretty%20Lethal%20%282026%29%20720p%20AMZN-WEB%20x264%20MSubs%20%5BDual%20Audio%5D%5BHindi%205.1%2BEnglish%205.1%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Pretty%20Lethal%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "Is God Is (2026) 720p WEBRip",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Is%20God%20Is%20%282026%29%20720p%20WEBRip/Is.God.Is.2026.720p.WEB-DL.x264.ESub-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Is%20God%20Is%20%282026%29%20720p%20WEBRip/a_AL_.jpg"
+    },
+    {
+        "title": "Seven Snipers (2026) 720p WEBRip",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Seven%20Snipers%20%282026%29%20720p%20WEBRip/Seven.Snipers.2026.720p.WEB-DL.x264.ESub-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Seven%20Snipers%20%282026%29%20720p%20WEBRip/a_AL_.jpg"
+    },
+    {
+        "title": "Ladies First (2026) 720p NF [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Ladies%20First%20%282026%29%20720p%20NF%20%5BDual%20Audio%5D/Ladies%20First%20%282026%29%20720p%20NF-WEB%20x264%20MSubs%20%5BDual%20Audio%5D%5BHindi%205.1%2BEnglish%205.1%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Ladies%20First%20%282026%29%20720p%20NF%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "Solo Mio (2026) 720p WEBRip",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Solo%20Mio%20%282026%29%20720p%20WEBRip/Solo.Mio.2026.720p.WEB-DL.x264.ESub-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Solo%20Mio%20%282026%29%20720p%20WEBRip/a_AL_.jpg"
+    },
+    {
+        "title": "The Internship (2026) 720p AMZN [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/The%20Internship%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/The%20Internship%20%282026%29%20720p%20AMZN-WEB%20x264%20ESub%20%5BDual%20Audio%5D%5BHindi%205.1%2BEnglish%205.1%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/The%20Internship%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "Michael (2026) 720p AMZN [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Michael%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/Michael%20%282026%29%20720p%20AMZN-WEB%20x264%20MSubs%20%5BDual%20Audio%5D%5BHindi%205.1%2BEnglish%205.1%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Michael%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "Outcome (2026) 720p WEBRip",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Outcome%20%282026%29%20720p%20WEBRip/Outcome.2026.720p.WEB-DL.x264.ESub-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Outcome%20%282026%29%20720p%20WEBRip/a_AL_.jpg"
+    },
+    {
+        "title": "Send Help (2026) 720p WEBRip",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Send%20Help%20%282026%29%20720p%20WEBRip/Send.Help.2026.720p.WEB-DL.x264.ESub-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Send%20Help%20%282026%29%20720p%20WEBRip/a_AL_.jpg"
+    },
+    {
+        "title": "The Bride! (2026) 720p WEBRip",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/The%20Bride%21%20%282026%29%20720p%20WEBRip/The.Bride.2026.720p.WEB-DL.x264.MSubs-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/The%20Bride%21%20%282026%29%20720p%20WEBRip/a_AL_.jpg"
+    },
+    {
+        "title": "The Dreadful (2026) 720p WEBRip",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/The%20Dreadful%20%282026%29%20720p%20WEBRip/The.Dreadful.2026.720p.WEB-DL.x264.ESub-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/The%20Dreadful%20%282026%29%20720p%20WEBRip/a_AL_.jpg"
+    },
+    {
+        "title": "Wardriver (2026) 720p AMZN [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Wardriver%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/Wardriver%20%282026%29%20720p%20AMZN-WEB%20x264%20ESub%20%5BDual%20Audio%5D%5BHindi%202.0%2BEnglish%205.1%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Wardriver%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "Scream 7 (2026) 720p WEBRip",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Scream%207%20%282026%29%20720p%20WEBRip/Scream.7.2026.720p.WEB-DL.x264.ESub-HDHub.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Scream%207%20%282026%29%20720p%20WEBRip/a_AL_.jpg"
+    },
+    {
+        "title": "The Odyssey (2026) 720p HDTC V3 [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/The%20Odyssey%20%282026%29%20720p%20HDTC%20V3%20%5BDual%20Audio%5D/The%20Odyssey%20%282026%29%20IMAX%20720p%20HDTC%20V3%20x264%20%5BMulti%20Audio%5D%5BHindi%20%28Clean%29%2BEnglish%20CAM%2BMulti%20CAM%5D%20-HDHub.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/The%20Odyssey%20%282026%29%20720p%20HDTC%20V3%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "Mercy (2026) 720p AMZN [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Mercy%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/Mercy%20%282026%29%20720p%20AMZN-WEB%20x264%20ESub%20%5BDual%20Audio%5D%5BHindi%205.1%2BEnglish%205.1%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Mercy%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "Evil Dead Burn (2026) 720p HDTC [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Evil%20Dead%20Burn%20%282026%29%20720p%20HDTC%20%5BDual%20Audio%5D/Evil%20Dead%20Burn%20%282026%29%20720p%20HDTC%20x264%20%5BDual%20Audio%5D%5BHindi%20%28Clean%29%2BEnglish%20CAM%5D%20-HDHub.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Evil%20Dead%20Burn%20%282026%29%20720p%20HDTC%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "How to Make a Killing (2026) 720p WEBRip",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/How%20to%20Make%20a%20Killing%20%282026%29%20720p%20WEBRip/How.to.Make.a.Killing.2026.720p.WEB-DL.x264.ESub-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/How%20to%20Make%20a%20Killing%20%282026%29%20720p%20WEBRip/a_AL_.jpg"
+    },
+    {
+        "title": "Killer Whale (2026) 720p AMZN [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Killer%20Whale%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/Killer%20Whale%20%282026%29%20720p%20AMZN-WEB%20x264%20ESub%20%5BDual%20Audio%5D%5BHindi%202.0%2BEnglish%205.1%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Killer%20Whale%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "The Bluff (2026) 720p AMZN [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/The%20Bluff%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/The%20Bluff%20%282026%29%20720p%20AMZN-WEB%20x264%20ESub%20%5BDual%20Audio%5D%5BHindi%205.1%2BEnglish%205.1%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/The%20Bluff%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "Hokum (2026) 720p WEBRip",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Hokum%20%282026%29%20720p%20WEBRip/Hokum.2026.720p.WEB-DL.x264.ESub-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Hokum%20%282026%29%20720p%20WEBRip/a_AL_.jpg"
+    },
+    {
+        "title": "Zeta (2026) 720p AMZN [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Zeta%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/Zeta%20%28Agent%20Zeta%29%20%282026%29%20720p%20AMZN-WEB%20x264%20MSubs%20%5BDual%20Audio%5D%5BHindi%205.1%2BEnglish%205.1%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Zeta%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "Shelter (2026) 720p [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Shelter%20%282026%29%20720p%20%5BDual%20Audio%5D/Shelter%20%282026%29%20720p%20BluRay%20x264%20ESub%20%5BDual%20Audio%5D%5BHindi%202.0%2BEnglish%205.1%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Shelter%20%282026%29%20720p%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "Sniper-No Nation (2026) 720p AMZN [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Sniper-No%20Nation%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/Sniper%20No%20Nation%20%282026%29%20720p%20AMZN-WEB%20x264%20ESub%20%5BDual%20Audio%5D%5BHindi%205.1%2BEnglish%205.1%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Sniper-No%20Nation%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "The Huntsman (2026) 720p WEBRip",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/The%20Huntsman%20%282026%29%20720p%20WEBRip/The.Huntsman.2026.720p.WEB-DL.x264.ESub-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/The%20Huntsman%20%282026%29%20720p%20WEBRip/a_AL_.jpg"
+    },
+    {
+        "title": "Forbidden Fruits (2026) 720p WEBRip",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Forbidden%20Fruits%20%282026%29%20720p%20WEBRip/Forbidden.Fruits.2026.720p.WEB-DL.x264.ESub-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Forbidden%20Fruits%20%282026%29%20720p%20WEBRip/a_AL_.jpg"
+    },
+    {
+        "title": "Tom Clancy's Jack Ryan-Ghost War (2026) 720p AMZN [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Tom%20Clancy%27s%20Jack%20Ryan-Ghost%20War%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/Tom%20Clancys%20Jack%20Ryan%20Ghost%20War%20%282026%29%20720p%20AMZN-WEB%20x265%20HEVC%20MSubs%20%5BDual%20Audio%5D%5BHindi%205.1%2BEnglish%205.1%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Tom%20Clancy%27s%20Jack%20Ryan-Ghost%20War%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "The Drama (2026) 720p WEBRip",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/The%20Drama%20%282026%29%20720p%20WEBRip/The.Drama.2026.720p.WEB-DL.x264.ESub-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/The%20Drama%20%282026%29%20720p%20WEBRip/a_AL_.jpg"
+    },
+    {
+        "title": "Psycho Killer (2026) 720p WEBRip",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Psycho%20Killer%20%282026%29%20720p%20WEBRip/Psycho.Killer.2026.720p.WEB-DL.x264.ESub-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Psycho%20Killer%20%282026%29%20720p%20WEBRip/a_AL_.jpg"
+    },
+    {
+        "title": "Star Wars-The Mandalorian and Grogu (2026) 720p HDRip [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Star%20Wars-The%20Mandalorian%20and%20Grogu%20%282026%29%20720p%20HDRip%20%5BDual%20Audio%5D/Star%20Wars%20The%20Mandalorian%20and%20Grogu%20%282026%29%20720p%20HDRip%20x264%20%5BDual%20Audio%5D%5BHindi%20%28Clean%29%2BEnglish%202.0%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Star%20Wars-The%20Mandalorian%20and%20Grogu%20%282026%29%20720p%20HDRip%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "Iron Lung (2026) 720p WEBRip",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Iron%20Lung%20%282026%29%20720p%20WEBRip/Iron.Lung.2026.720p.WEB-DL.x264.ESub-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Iron%20Lung%20%282026%29%20720p%20WEBRip/a_AL_.jpg"
+    },
+    {
+        "title": "Sleepwalker (2026) 720p WEBRip",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Sleepwalker%20%282026%29%20720p%20WEBRip/Sleepwalker.2026.720p.WEB-DL.x264.ESub-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Sleepwalker%20%282026%29%20720p%20WEBRip/a_AL_.jpg"
+    },
+    {
+        "title": "Hellfire (2026) 720p WEBRip",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Hellfire%20%282026%29%20720p%20WEBRip/Hellfire.2026.720p.WEB-DL.x264.ESub-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Hellfire%20%282026%29%20720p%20WEBRip/a_AL_.jpg"
+    },
+    {
+        "title": "Faces of Death (2026) 720p WEBRip",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Faces%20of%20Death%20%282026%29%20720p%20WEBRip/Faces.of.Death.2026.720p.WEB-DL.x264.ESub-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Faces%20of%20Death%20%282026%29%20720p%20WEBRip/a_AL_.jpg"
+    },
+    {
+        "title": "Ready or Not 2-Here I Come (2026) 720p WEBRip",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Ready%20or%20Not%202-Here%20I%20Come%20%282026%29%20720p%20WEBRip/Ready.Or.Not.2.Here.I.Come.2026.720p.WEB-DL.x264.ESub-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Ready%20or%20Not%202-Here%20I%20Come%20%282026%29%20720p%20WEBRip/a_AL_.jpg"
+    },
+    {
+        "title": "The Mortuary Assistant (2026) 720p WEBRip",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/The%20Mortuary%20Assistant%20%282026%29%20720p%20WEBRip/The.Mortuary.Assistant.2026.720p.WEB-DL.x264.ESub-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/The%20Mortuary%20Assistant%20%282026%29%20720p%20WEBRip/a_AL_.jpg"
+    },
+    {
+        "title": "Project Hail Mary (2026) 720p AMZN [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Project%20Hail%20Mary%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/Project%20Hail%20Mary%20%282026%29%20IMAX%20720p%20AMZN-WEB%20x264%20ESub%20%5BDual%20Audio%5D%5BHindi%202.0%2BEnglish%205.1%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Project%20Hail%20Mary%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "18th Rose (2026) 720p NF [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/18th%20Rose%20%282026%29%20720p%20NF%20%5BDual%20Audio%5D/18th%20Rose%20%282026%29%20720p%20NF-WEB%20x264%20MSubs%20%5BDual%20Audio%5D%5BHindi%205.1%2BEnglish%205.1%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/18th%20Rose%20%282026%29%20720p%20NF%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "Misdirection (2026) 720p WEBRip",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Misdirection%20%282026%29%20720p%20WEBRip/Misdirection.2026.720p.WEB-DL.x264.ESub-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Misdirection%20%282026%29%20720p%20WEBRip/a_AL_.jpg"
+    },
+    {
+        "title": "Greenland 2-Migration (2026) 720p [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Greenland%202-Migration%20%282026%29%20720p%20%5BDual%20Audio%5D/Greenland%202%20Migration%20%282026%29%20720p%20BluRay%20x264%20MSubs%20%5BDual%20Audio%5D%5BHindi%205.1%2BEnglish%205.1%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Greenland%202-Migration%20%282026%29%20720p%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "War Machine (2026) 720p NF [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/War%20Machine%20%282026%29%20720p%20NF%20%5BDual%20Audio%5D/War%20Machine%20%282026%29%20720p%20NF-WEB%20x264%20MSubs%20%5BDual%20Audio%5D%5BHindi%205.1%2BEnglish%205.1%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/War%20Machine%20%282026%29%20720p%20NF%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "Disclosure Day (2026) 720p AMZN [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Disclosure%20Day%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/Disclosure%20Day%20%282026%29%20720p%20AMZN-WEB%20x264%20MSubs%20%5BDual%20Audio%5D%5BHindi%205.1%2BEnglish%205.1%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Disclosure%20Day%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "Love Me, Love Me (2026) 720p AMZN [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Love%20Me%2C%20Love%20Me%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/Love%20Me%20Love%20Me%20%282026%29%20720p%20AMZN-WEB%20x264%20ESub%20%5BDual%20Audio%5D%5BHindi%205.1%2BEnglish%205.1%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Love%20Me%2C%20Love%20Me%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "Return to Silent Hill (2026) 720p [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Return%20to%20Silent%20Hill%20%282026%29%20720p%20%5BDual%20Audio%5D/Return%20to%20Silent%20Hill%20%282026%29%20720p%20BluRay%20x264%20ESub%20%5BDual%20Audio%5D%5BHindi%202.0%2BEnglish%205.1%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Return%20to%20Silent%20Hill%20%282026%29%20720p%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "Twisted (2026) 720p AMZN [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Twisted%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/Twisted%20%282026%29%20720p%20AMZN-WEB%20x264%20ESub%20%5BDual%20Audio%5D%5BHindi%205.1%2BEnglish%205.1%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Twisted%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "Grizzly Night (2026) 720p WEBRip",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Grizzly%20Night%20%282026%29%20720p%20WEBRip/Grizzly.Night.2026.720p.WEB-DL.x264.ESub-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Grizzly%20Night%20%282026%29%20720p%20WEBRip/a_AL_.jpg"
+    },
+    {
+        "title": "Mortal Kombat II (2026) 720p AMZN [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Mortal%20Kombat%20II%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/Mortal%20Kombat%20II%20%282026%29%20720p%20AMZN-WEB%20x264%20ESub%20%5BDual%20Audio%5D%5BHindi%205.1%2BEnglish%205.1%5D%20-HDHub.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Mortal%20Kombat%20II%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "The Wrecking Crew (2026) 720p AMZN [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/The%20Wrecking%20Crew%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/The%20Wrecking%20Crew%20%282026%29%20720p%20AMZN-WEB%20x264%20MSubs%20%5BDual%20Audio%5D%5BHindi%205.1%2BEnglish%205.1%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/The%20Wrecking%20Crew%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "Remarkably Bright Creatures (2026) 720p NF [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Remarkably%20Bright%20Creatures%20%282026%29%20720p%20NF%20%5BDual%20Audio%5D/Remarkably%20Bright%20Creatures%20%282026%29%20720p%20NF-WEB%20x264%20MSubs%20%5BDual%20Audio%5D%5BHindi%205.1%2BEnglish%205.1%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Remarkably%20Bright%20Creatures%20%282026%29%20720p%20NF%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "The Yeti (2026) 720p WEBRip",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/The%20Yeti%20%282026%29%20720p%20WEBRip/The.Yeti.2026.720p.WEB-DL.x264.ESub-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/The%20Yeti%20%282026%29%20720p%20WEBRip/a_AL_.jpg"
+    },
+    {
+        "title": "Apex (2026) 720p NF [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Apex%20%282026%29%20720p%20NF%20%5BDual%20Audio%5D/Apex%20%282026%29%20720p%20NF-WEB%20x264%20MSubs%20%5BDual%20Audio%5D%5BHindi%205.1%2BEnglish%205.1%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Apex%20%282026%29%20720p%20NF%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "The Whistler (2026) 720p WEBRip",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/The%20Whistler%20%282026%29%20720p%20WEBRip/The.Whistler.2026.720p.WEB-DL.x264.ESub-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/The%20Whistler%20%282026%29%20720p%20WEBRip/a_AL_.jpg"
+    },
+    {
+        "title": "One Mile-Chapter Two (2026) 720p AMZN [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/One%20Mile-Chapter%20Two%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/One%20Mile%20Chapter%20Two%20%282026%29%20720p%20AMZN-WEB%20x264%20ESub%20%5BDual%20Audio%5D%5BHindi%205.1%2BEnglish%205.1%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/One%20Mile-Chapter%20Two%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "Flavia (2026) 720p WEBRip",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Flavia%20%282026%29%20720p%20WEBRip/Flavia.2026.720p.WEB-DL.x264.ESub-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Flavia%20%282026%29%20720p%20WEBRip/a_AL_.jpg"
+    },
+    {
+        "title": "Supergirl (2026) 720p AMZN [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Supergirl%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/Supergirl%20%282026%29%20720p%20AMZN-WEB%20x264%20MSubs%20%5BDual%20Audio%5D%5BHindi%205.1%2BEnglish%205.1%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Supergirl%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "Thrash (2026) 720p NF [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Thrash%20%282026%29%20720p%20NF%20%5BDual%20Audio%5D/Thrash%20%282026%29%20720p%20NF-WEB%20x264%20MSubs%20%5BDual%20Audio%5D%5BHindi%205.1%2BEnglish%205.1%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Thrash%20%282026%29%20720p%20NF%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "Pizza Movie (2026) 720p DSNP [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Pizza%20Movie%20%282026%29%20720p%20DSNP%20%5BDual%20Audio%5D/Pizza%20Movie%20%282026%29%20720p%20DSNP-WEB%20x264%20MSubs%20%5BDual%20Audio%5D%5BHindi%205.1%2BEnglish%205.1%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Pizza%20Movie%20%282026%29%20720p%20DSNP%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "The Rip (2026) 720p NF [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/The%20Rip%20%282026%29%20720p%20NF%20%5BDual%20Audio%5D/The%20Rip%20%282026%29%20720p%20NF-WEB%20x264%20MSubs%20%5BDual%20Audio%5D%5BHindi%205.1%2BEnglish%205.1%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/The%20Rip%20%282026%29%20720p%20NF%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "In the Grey (2026) 720p WEBRip",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/In%20the%20Grey%20%282026%29%20720p%20WEBRip/In.the.Grey.2026.720p.WEB-DL.x264.ESub-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/In%20the%20Grey%20%282026%29%20720p%20WEBRip/a_AL_.jpg"
+    },
+    {
+        "title": "Mermaid (2026) 720p AMZN [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Mermaid%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/Mermaid%20%282026%29%20720p%20AMZN-WEB%20x264%20ESub%20%5BDual%20Audio%5D%5BHindi%202.0%2BEnglish%205.1%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Mermaid%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "People We Meet on Vacation (2026) 720p NF [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/People%20We%20Meet%20on%20Vacation%20%282026%29%20720p%20NF%20%5BDual%20Audio%5D/People%20We%20Meet%20on%20Vacation%20%282026%29%20720p%20NF-WEB%20x264%20MSubs%20%5BDual%20Audio%5D%5BHindi%205.1%2BEnglish%205.1%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/People%20We%20Meet%20on%20Vacation%20%282026%29%20720p%20NF%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "The Passenger (2026) 720p WEBRip",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/The%20Passenger%20%282026%29%20720p%20WEBRip/The.Passenger.2026.720p.WEB-DL.x264.ESub-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/The%20Passenger%20%282026%29%20720p%20WEBRip/a_AL_.jpg"
+    },
+    {
+        "title": "Spider-Man - Brand New Day (2026) 720p HDTC V3 [Multi Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Spider-Man%20-%20Brand%20New%20Day%20%282026%29%20720p%20HDTC%20V3%20%5BMulti%20Audio%5D/Spider-Man%20Brand%20New%20Day%20%282026%29%20720p%20HDTC%20V3%20x264%20ESub%20%5BMulti%20Audio%5D%5BHindi%20%28Clean%29%2BEnglish%20CAM%2BMulti%20CAM%5D%20-HDHub.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Spider-Man%20-%20Brand%20New%20Day%20%282026%29%20720p%20HDTC%20V3%20%5BMulti%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "Peaky Blinders-The Immortal Man (2026) 720p NF [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Peaky%20Blinders-The%20Immortal%20Man%20%282026%29%20720p%20NF%20%5BDual%20Audio%5D/Peaky%20Blinders%20The%20Immortal%20Man%20%282026%29%20720p%20NF-WEB%20x264%20MSubs%20%5BDual%20Audio%5D%5BHindi%205.1%2BEnglish%205.1%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Peaky%20Blinders-The%20Immortal%20Man%20%282026%29%20720p%20NF%20%5BDual%20Audio%5D/a_AL_.jpg"
+    },
+    {
+        "title": "Starbright (2026) 720p WEBRip",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Starbright%20%282026%29%20720p%20WEBRip/Starbright.2026.720p.WEB-DL.x264.ESub-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Starbright%20%282026%29%20720p%20WEBRip/a_AL_.jpg"
+    },
+    {
+        "title": "Relationship Goals (2026) 720p AMZN [Dual Audio]",
+        "sub": "BDIX Server • Direct Stream",
+        "url": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Relationship%20Goals%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/Relationship%20Goals%20%282026%29%20720p%20AMZN-WEB%20x264%20MSubs%20%5BDual%20Audio%5D%5BHindi%205.1%2BEnglish%205.1%5D%20-MsMod.mkv",
+        "poster": "http://172.16.50.7/DHAKA-FLIX-7/English%20Movies/%282026%29/Relationship%20Goals%20%282026%29%20720p%20AMZN%20%5BDual%20Audio%5D/a_AL_.jpg"
+    }
+];
+        let currentPage = 1;
+        const itemsPerPage = 10;
+
         const playerContainer = document.getElementById('playerContainer');
         const currentMovieTitle = document.getElementById('currentMovieTitle');
+        const playlistGrid = document.getElementById('playlistGrid');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const pageIndicator = document.getElementById('pageIndicator');
+
+        function renderMovies() {
+            playlistGrid.innerHTML = '';
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const pageMovies = movies.slice(startIndex, endIndex);
+
+            pageMovies.forEach(movie => {
+                const card = document.createElement('div');
+                card.className = 'movie-card';
+                card.onclick = () => playMovie(movie.title, movie.url, movie.poster);
+                card.innerHTML = `
+                    <div class="thumbnail-box">
+                        <img src="${movie.poster}" alt="${movie.title}" onerror="this.src='https://via.placeholder.com/300x400?text=No+Poster'">
+                    </div>
+                    <div class="card-details">
+                        <div class="card-title">${movie.title}</div>
+                        <div class="card-sub">${movie.sub}</div>
+                    </div>
+                `;
+                playlistGrid.appendChild(card);
+            });
+
+            const totalPages = Math.ceil(movies.length / itemsPerPage) || 1;
+            pageIndicator.innerText = `Page ${currentPage} of ${totalPages}`;
+            prevBtn.disabled = currentPage === 1;
+            nextBtn.disabled = currentPage === totalPages;
+        }
+
+        function changePage(direction) {
+            currentPage += direction;
+            renderMovies();
+        }
 
         function playMovie(title, videoUrl, posterUrl) {
             currentMovieTitle.innerText = title;
@@ -349,25 +699,13 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function playYoutube(title, embedUrl) {
-            currentMovieTitle.innerText = title;
-            playerContainer.innerHTML = `
-                <iframe src="${embedUrl}?autoplay=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            `;
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
         function loadCustomUrl() {
             const inputUrl = document.getElementById('customUrlInput').value.trim();
-            if (!inputUrl) return alert('অনুগ্রহ করে একটি লিংক দিন!');
-
-            if (inputUrl.includes('youtube.com') || inputUrl.includes('youtu.be')) {
-                let embedUrl = inputUrl.replace('watch?v=', 'embed/');
-                playYoutube('Custom YouTube Video', embedUrl);
-            } else {
-                playMovie('Custom Local Video Stream', inputUrl, '');
-            }
+            if (!inputUrl) return alert('Please enter a valid URL!');
+            playMovie('Custom Stream Video', inputUrl, '');
         }
+
+        renderMovies();
     </script>
 </body>
 </html>
